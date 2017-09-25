@@ -7,6 +7,9 @@ extern "C" {
 #include <gphoto2/gphoto2-filesys.h>
 }
 
+#include "gphoto_typedef.hpp"
+
+
 class GPhotoHelper {
 
 public:
@@ -16,6 +19,10 @@ public:
 
   static void setCameraModel (Camera *camera, GPContext *context, const char *model);
   static void setCameraPort (Camera *camera, GPPortInfoList *list, const char *port);
+
+  static std::string getSummary (Camera *camera, GPContext *context);
+  static StringList getAllFilenames (Camera *camera, GPContext *context, std::string folder);
+  static StringList getAllFolders (Camera *camera, GPContext *context, std::string folder);
   
   // calback functions
   static void ctx_error_func (GPContext *context, const char *str, void *data);

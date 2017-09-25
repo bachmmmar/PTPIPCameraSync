@@ -1,5 +1,9 @@
 #include <iostream>
 #include "gphoto_helper.hpp"
+#include "gphoto_exceptions.hpp"
+
+#define THROW_ON_ERROR(function, message) {int __r=(function); if(__r != GP_OK) throw GPhotoException(message);}
+
 
 void GPhotoHelper::enableDebugLog() {
     gp_log_add_func (GP_LOG_ALL, debug_func, (void *) NULL);
@@ -12,6 +16,54 @@ void GPhotoHelper::createContextWithCallbacksRegistered(GPContext *context) {
     // Optional debugging and status output
     gp_context_set_error_func(context, ctx_error_func, NULL );
     gp_context_set_status_func(context, ctx_status_func, NULL );
+}
+
+
+std::string GPhotoHelper::getSummary(Camera *camera, GPContext *context) {
+   	CameraText text;
+
+	if (gp_camera_get_summary(camera, &text, context) != GP_OK) {
+	   throw GPhotoException("Failed to get camera summary!");
+	}
+
+	return std::string(text.text);
+}
+
+
+StringList GPhotoHelper::getAllFilenames (Camera *camera, GPContext *context, std::string folder) {
+	CameraList *list;
+	const char *name;
+	StringList filenames;
+
+	THROW_ON_ERROR (gp_list_new (&list), "Could not create a new list.");
+	gp_camera_folder_list_files (camera, folder.c_str(), list, context);
+	int filecount = gp_list_count (list);
+
+	for (int i = 0; i < filecount; i++) {
+	  gp_list_get_name (list, i, &name);
+          filenames.push_back(std::string(name));
+	}
+	gp_list_free (list);
+	return filenames;
+}
+
+
+StringList GPhotoHelper::getAllFolders (Camera *camera, GPContext *context, std::string folder) {
+	CameraList *list;
+	const char *name;
+	StringList foldernames;
+
+	
+	THROW_ON_ERROR (gp_list_new (&list), "Could not create a new list.");
+	THROW_ON_ERROR(gp_camera_folder_list_folders(camera, folder.c_str(), list, context), "Could not get folders");
+	int count = gp_list_count (list); 
+	for (int i = 0; i < count; i++) {
+	  THROW_ON_ERROR (gp_list_get_name(list, i, &name), "Could not get foldername!");
+	  foldernames.push_back(std::string(name));
+	}
+	
+	gp_list_free (list);
+	return foldernames;
 }
 
 
