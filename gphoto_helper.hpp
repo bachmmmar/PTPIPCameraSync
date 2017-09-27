@@ -12,12 +12,14 @@ class GPhotoHelper {
 
 public:
   static void enableDebugLog();
-  
+
+  // configuration and initialization functions
   static void createContextWithCallbacksRegistered(GPContext *context);
+  static void createCamera(Camera **camera);
+  static void setCameraModel (Camera *camera, GPContext *context, std::string model);
+  static void setCameraPort (Camera *camera, std::string port);
 
-  static void setCameraModel (Camera *camera, GPContext *context, const char *model);
-  static void setCameraPort (Camera *camera, GPPortInfoList *list, const char *port);
-
+  // main interface functions
   static std::string getSummary (Camera *camera, GPContext *context);
   static StringList getAllFilenames (Camera *camera, GPContext *context, std::string folder);
   static StringList getAllFolders (Camera *camera, GPContext *context, std::string folder);

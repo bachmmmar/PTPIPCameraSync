@@ -3,9 +3,11 @@
 #include <stdexcept>
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
 #include "gphoto_if.hpp"
 #include "gphoto_exceptions.hpp"
 
+using namespace boost::python;
 
 
 void translateException(const std::runtime_error& x) {
@@ -13,10 +15,8 @@ void translateException(const std::runtime_error& x) {
   PyErr_SetString(PyExc_UserWarning, message.c_str());
 };
 
-
-using namespace boost::python;
-BOOST_PYTHON_MODULE(gphoto_if)
-{
+/// \brief Defines which functions and classes are exported to Python.
+BOOST_PYTHON_MODULE(gphoto_if) {
   register_exception_translator<GPhotoException>(translateException);
 
   class_<StringList>("StringList")
