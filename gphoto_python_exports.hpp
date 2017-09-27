@@ -26,6 +26,7 @@ BOOST_PYTHON_MODULE(gphoto_if)
         .def("getSummary", &GPhotoIf::getSummary)
         .def("getFilenamesFromFolder", &GPhotoIf::getFilenamesFromFolder)
         .def("getFoldernamesFromFolder", &GPhotoIf::getFoldernamesFromFolder)
+        .def("downloadFile", &GPhotoIf::downloadFile)
     ;
 }
 

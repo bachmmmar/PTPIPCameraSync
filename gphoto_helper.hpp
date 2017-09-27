@@ -3,8 +3,6 @@
 extern "C" {
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-context.h>
-#include <gphoto2/gphoto2-setting.h>
-#include <gphoto2/gphoto2-filesys.h>
 }
 
 #include "gphoto_typedef.hpp"
@@ -23,6 +21,9 @@ public:
   static std::string getSummary (Camera *camera, GPContext *context);
   static StringList getAllFilenames (Camera *camera, GPContext *context, std::string folder);
   static StringList getAllFolders (Camera *camera, GPContext *context, std::string folder);
+  static void downloadFile (Camera *camera, GPContext *context,
+			    std::string folder, std::string filename,
+			    std::string destination_file);
   
   // calback functions
   static void ctx_error_func (GPContext *context, const char *str, void *data);

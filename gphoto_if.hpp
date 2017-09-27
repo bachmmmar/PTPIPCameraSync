@@ -17,6 +17,7 @@ public:
 
   StringList getFilenamesFromFolder(std::string folder);
   StringList getFoldernamesFromFolder(std::string folder);
+  void downloadFile(std::string camera_folder, std::string camera_file, std::string destination_file);
   
 private:
   std::string ip_;

@@ -17,8 +17,14 @@ def main():
 
     print('Connected!')
 
-    summary = gp.getSummary()
-    print(summary)
+#    summary = gp.getSummary()
+#    print(summary)
+
+    print('get one file')
+    gp.downloadFile('/store_00010001/2017-09-07/', 'DSC00307.ARW', 'MY_FirstRaw.ARW')
+
+    print('exit')
+    return 0
 
     print('folders')
     base_dir = gp.getFoldernamesFromFolder('/')

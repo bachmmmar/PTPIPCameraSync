@@ -40,6 +40,11 @@ StringList GPhotoIf::getFoldernamesFromFolder(std::string folder) {
   }
 
 
+void GPhotoIf::downloadFile(std::string camera_folder, std::string camera_file, std::string destination_file) {
+  GPhotoHelper::downloadFile (camera_, context_,
+			      camera_folder, camera_file,
+			      destination_file);
+}
 
   void GPhotoIf::openCamera() {
     std::cout << "Open Camera on ptp:<" << ip_ << ">" << std::endl;

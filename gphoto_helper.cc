@@ -1,3 +1,12 @@
+
+extern "C" {
+  #include <unistd.h>
+  #include <string.h>
+  //  #include <stdio.h>
+  #include <gphoto2/gphoto2-setting.h>
+  #include <gphoto2/gphoto2-filesys.h>
+}
+
 #include <iostream>
 #include "gphoto_helper.hpp"
 #include "gphoto_exceptions.hpp"
@@ -65,6 +74,49 @@ StringList GPhotoHelper::getAllFolders (Camera *camera, GPContext *context, std:
 	gp_list_free (list);
 	return foldernames;
 }
+
+
+void GPhotoHelper::downloadFile (Camera *camera, GPContext *context,
+				 std::string folder, std::string filename,
+				 std::string destination_file) {
+        int fd, res;
+        CameraFile *file;
+	//	std::string tmpfile = "tmpfileXXXXXX";
+
+	char tmpfile[] = "tmpfileXXXXXX";
+	fd = mkstemp(tmpfile);
+	if (fd == -1) {
+	    if (errno == EACCES) {
+	      throw GPhotoException("Permission denied (" + std::string(tmpfile) + ")!");
+	    }
+	    throw GPhotoException("Could not create temporary file (" + std::string(tmpfile) + ")!");
+	} else {
+	    res = gp_file_new_from_fd (&file, fd);
+	    if (res < GP_OK) {
+	        close (fd);
+		unlink (tmpfile);
+		throw GPhotoException("Permission denied (" + std::string(tmpfile) + ")!");
+	    }
+	}
+
+	CameraFileType type = GP_FILE_TYPE_NORMAL;
+        res = gp_camera_file_get (camera, folder.c_str(), filename.c_str(), type, file, context);
+	if (res < GP_OK) {
+	    gp_file_unref (file);
+	    unlink (tmpfile);
+	    throw GPhotoException("Could not get file from cam!");	    
+	}
+
+	gp_file_unref (file);
+	
+	res = std::rename(tmpfile, destination_file.c_str());
+	if (res) {
+	  unlink (tmpfile);
+	  throw GPhotoException("Could not rename file!");
+	}
+}
+
+
 
 
 void GPhotoHelper::setCameraModel (Camera *camera, GPContext *context, const char *model) {
