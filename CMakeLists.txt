@@ -10,10 +10,10 @@ else()
     FIND_PACKAGE(Boost COMPONENTS python)
 endif()
 
-ENABLE_TESTING()
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${LIBGPHOTO2_INCLUDE_DIRS})
 LINK_LIBRARIES(${Boost_LIBRARIES} ${PYTHON_LIBRARIES} ${LIBGPHOTO2_LIBRARIES}) # Deprecated but so convenient!
 
-PYTHON_ADD_MODULE(gphoto_if gphoto_if.cc gphoto_helper.cc)
+add_subdirectory("${PROJECT_SOURCE_DIR}/gphoto_if/")
+PYTHON_ADD_MODULE(gphoto_if ${SOURCE} ${HEADERS})
 
 
