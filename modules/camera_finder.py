@@ -1,4 +1,5 @@
 import os
+import logging
 
 class CameraFinder():
     PING_OPTIONS = '-q -c 1 -W 2'
@@ -8,10 +9,12 @@ class CameraFinder():
             raise Exception('ip {} is invalid'.format(ip))
         self._ip = ip
         self._ping_options = CameraFinder.PING_OPTIONS
+        self._log = logging.getLogger('CameraFinder')
 
     def isReachable(self):
         ret = os.system('ping {} {} > /dev/null 2>&1'.format(self._ping_options, self._ip))
         if ret != 0:
+            self._log.debug('No camera with ip {} found'.format(self._ip))
             return False
         else:
             return True
