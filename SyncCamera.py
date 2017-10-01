@@ -8,16 +8,19 @@ import sys
 import time
 
 from modules import *
-
 import gphoto_if
 
 class SyncCamera():
+
+    GPhotoIf_debug = False
+    SyncCamera_debug = logging.DEBUG
+
     def __init__(self):
-        logging.basicConfig(
-            format='%(levelname)s: %(name)s: %(message)s', level=logging.DEBUG)
+        logging.basicConfig(format='%(levelname)s: %(name)s: %(message)s', level=self.SyncCamera_debug)
         self._log = logging.getLogger('SyncCamera')
 
         self._arg = getParsedArguments()
+        self._notification = NotificationInterface()
 
         #check arguments
         create_datafile(self._arg.datafile, self._arg.create_datafile)
@@ -32,16 +35,16 @@ class SyncCamera():
             if self._cam_finder.isReachable():
                 self._log.debug('Camera found! Start synchronization...')
                 if self.syncCamera() is True:
-                    print 'All files successfully synchronized!'
+                    self._notification.pushMessage('All files successfully synchronized!')
                     time.sleep(20)
                 else:
-                    print 'An error ocured. Synchronization abborded!'
+                    self._notification.pushMessage('An error ocured. Synchronization abborded!')
             time.sleep(3)
 
 
     def syncCamera(self):
         try:
-            gp = gphoto_if.GPhotoIf(self._arg.model, self._arg.ip, False)
+            gp = gphoto_if.GPhotoIf(self._arg.model, self._arg.ip, self.GPhotoIf_debug)
             db = DataBase(self._arg.datafile)
             sync = CameraSynchronizer(gp,db)
             while not self._sig.terminationSignalReceived():
