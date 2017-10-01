@@ -1,10 +1,13 @@
 
 extern "C" {
+  #include <stdlib.h>
+  #include <errno.h>
   #include <unistd.h>
   #include <gphoto2/gphoto2-setting.h>
   #include <gphoto2/gphoto2-filesys.h>
 }
 
+#include <cstdio>
 #include <iostream>
 #include "gphoto_helper.hpp"
 #include "gphoto_exceptions.hpp"
