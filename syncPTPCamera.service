@@ -5,7 +5,7 @@ Requires=multi-user.target
 [Service]
 Type=idle
 WorkingDirectory=%PATH_TO_SCRIPT%
-ExecStart=%PATH_TO_SCRIPT%/SyncCamera.py
+ExecStart=%PATH_TO_SCRIPT%/runSyncCamera.sh
 Restart=always
 
 [Install]

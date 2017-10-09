@@ -53,7 +53,13 @@ CameraConfiguration:
   --model MODEL         Camera model (default: Sony PTP)
 ```
 
-### Register service
+### Register service as a service
+This allows the SyncCamera.py to run on system startup and automatically syncing when the camera is connected.
+1. Copy the systemd service configuration (helper_scrips/syncPTPCamera.service) to /etc/systemd/system/.
+2. Reload systemd to read the new configuration file `sudo systemctl daemon-reload`. 
+3. Configure the ip, model and output path in the `runSyncCamera.sh` script.
+4. Configure the path to `runSyncCamera.sh` script in the `/etc/systemd/system/syncPTPCamera.service`.
+5. Enable service `sudo systemctl enable syncPTPCamera.service`
 
 
 ### Debuging
