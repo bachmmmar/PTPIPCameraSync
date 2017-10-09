@@ -3,6 +3,8 @@ extern "C" {
   #include <stdlib.h>
   #include <errno.h>
   #include <unistd.h>
+  #include <string.h>
+  #include <sys/stat.h>
   #include <gphoto2/gphoto2-setting.h>
   #include <gphoto2/gphoto2-filesys.h>
 }
@@ -94,7 +96,10 @@ void GPhotoHelper::downloadFile (Camera *camera, GPContext *context,
 				 std::string destination_file) {
     int fd, res;
     CameraFile *file;
-    char tmpfile[] = "tmpfileXXXXXX";
+    char tmpfile[1000];
+    char file_mode[] = "0660";
+    std::string tmpstr = destination_file + "XXXXXX";
+    strcpy(tmpfile, tmpstr.c_str());
 
     // create temporary file and directly open filedescriptor
     fd = mkstemp(tmpfile);
@@ -126,6 +131,8 @@ void GPhotoHelper::downloadFile (Camera *camera, GPContext *context,
         unlink (tmpfile);
 	throw GPhotoException("Could not rename file!");
     }
+    int file_mode_i = strtol(file_mode, 0, 8);
+    chmod(destination_file.c_str(), file_mode_i);
 }
 
 
