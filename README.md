@@ -7,26 +7,30 @@ There was no automatic tool to synchronize my Sony I7RII camera using WiFi. This
 5. Sends the notification (Pushjet if selected)
 
 
-## Installation
+## Details
+### Setup camera
+First prepare your camera. This meens that you need to create a GUID with your camera. Here [https://github.com/falk0069/sony-pm-alt] is a repostiory explaining all that.
+After that you need to verify that `gphoto2 --port ptpip:<cameras ip address> --summary` is working.
+Now you are ready to use the SyncCamera.py!
+
+
+### Required tools and libraries
 The synchronization tool works on Linux (tested on Ubuntu 16.04 and 17.04). The following need to be installed:
 ```bash
 # to compile the library
 sudo apt-get install -y libgphoto2-dev libboost-python-dev cmake
 
-# compile the pyhton - libgphoto interface library
-cd build
-cmake ..
-make
-
 # required Python packages and tools
 sudo apt-get install -y gphoto2 python-requests
 ```
 
-## Details
-### Setup
-First prepare your camera. This meens that you need to create a GUID with your camera. Here [https://github.com/falk0069/sony-pm-alt] is a repostiory explaining all that.
-After that you need to verify that `gphoto2 --port ptpip:<cameras ip address> --summary` is working.
-Now you are ready to use the SyncCamera.py!
+### Compile interface
+```bash 
+# compile the pyhton - libgphoto interface library
+cd build
+cmake ..
+make
+```
 
 ### SyncCamera.py --help
 ```bash
@@ -53,7 +57,7 @@ CameraConfiguration:
   --model MODEL         Camera model (default: Sony PTP)
 ```
 
-### Register service as a service
+### Register as a service
 This allows the SyncCamera.py to run on system startup and automatically syncing when the camera is connected.
 1. Copy the systemd service configuration (helper_scrips/syncPTPCamera.service) to /etc/systemd/system/.
 2. Reload systemd to read the new configuration file `sudo systemctl daemon-reload`. 
@@ -77,3 +81,7 @@ You can get notification on Smartphone by using Pushjet App.
 4. Install python-requests: `sudo apt-get install -y python-requests`
 5. Use the Public id to subscribe to the service on smartphone.
 
+
+## Tips
+* Ensure the camera timeout is high enogh >5min
+* Configure camera to create new folder every day. This ensures files are synchronized even if the counter in  the camera has ben reseted to factory defaults.
